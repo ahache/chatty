@@ -9,42 +9,45 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentUser: {name: "Alex"},
+      currentUser: 'Alex',
       messages: []
     };
     this.onNewPost = this.onNewPost.bind(this);
+    this.updateCurrentUser = this.updateCurrentUser.bind(this);
   }
 
-
-
   componentDidMount() {
-    const socket = new WebSocket("ws:localhost:3001");
-    this.socket = socket;
-    socket.onopen = function (event) {
-      console.log("Connected to Server");
+    this.socket = new WebSocket("ws:localhost:3001");
+    this.socket.onmessage = (event) => {
+      
+      const newMessage = JSON.parse(event.data);
+      
+      if (newMessage.type === 'count') {
+        this.setState({userCount: newMessage.userCount});
+      } else {
+        const messages = this.state.messages.concat(newMessage);
+        this.setState({messages: messages});
+      }
+    }
+  }
+
+  updateCurrentUser(user) {
+    if (this.state.currentUser !== user) {
+      this.socket.send(JSON.stringify({type: 'update', oldUser: this.state.currentUser, newUser: user}));
+      this.setState({currentUser: user});
     }
   }
 
   onNewPost(post) {
-    // const newMessage = {username: post.user, content: post.content};
-    // const messages = this.state.messages.concat(newMessage);
-    // this.setState({messages: messages});
-
-    this.socket.send(JSON.stringify(post));
-
-    this.socket.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      const messages = this.state.messages.concat(newMessage);
-      this.setState({messages: messages});
-    }
+    this.socket.send(JSON.stringify({type: 'content', content: post.content, user: post.user}));
   }
 
   render() {
     return (
       <div>
-        <Navbar />
+        <Navbar userCount={ this.state.userCount } />
         <MessageList messages={ this.state.messages } />
-        <Chatbar user={ this.state.currentUser } onNewPost={ this.onNewPost } />
+        <Chatbar currentUser={ this.state.currentUser } onNewPost={ this.onNewPost } updateCurrentUser={ this.updateCurrentUser }/>
       </div>
     );
   }
