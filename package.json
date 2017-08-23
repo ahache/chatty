@@ -21,8 +21,7 @@
   ],
   "author": "Alex Hache",
   "license": "MIT",
-  "bugs": {
-  },
+  "bugs": {},
   "homepage": "https://github.com/ahache/chatty",
   "engines": {
     "node": ">=6.0.0"
@@ -45,6 +44,7 @@
   },
   "dependencies": {
     "react": "15.4.2",
-    "react-dom": "15.4.2"
+    "react-dom": "15.4.2",
+    "ws": "3.1.0"
   }
 }
