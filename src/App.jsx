@@ -3,6 +3,7 @@ import Navbar from './Navbar.jsx';
 import MessageList from './MessageList.jsx';
 import Chatbar from './Chatbar.jsx';
 
+const colors = ['#FF0000','#00FF00','#0000FF','#FFA500'];
 
 class App extends Component {
 
@@ -21,12 +22,18 @@ class App extends Component {
     this.socket.onmessage = (event) => {
       
       const newMessage = JSON.parse(event.data);
-      
-      if (newMessage.type === 'count') {
-        this.setState({userCount: newMessage.userCount});
-      } else {
-        const messages = this.state.messages.concat(newMessage);
-        this.setState({messages: messages});
+
+      switch (newMessage.type) {
+        case 'color':
+          this.setState({color: colors[newMessage.index]});
+          break;
+        case 'count':
+          this.setState({userCount: newMessage.userCount});
+          break;
+        default:
+          const messages = this.state.messages.concat(newMessage);
+          this.setState({messages: messages});
+          break;
       }
     }
   }
@@ -46,7 +53,7 @@ class App extends Component {
     return (
       <div>
         <Navbar userCount={ this.state.userCount } />
-        <MessageList messages={ this.state.messages } />
+        <MessageList messages={ this.state.messages } color={ this.state.color } />
         <Chatbar currentUser={ this.state.currentUser } onNewPost={ this.onNewPost } updateCurrentUser={ this.updateCurrentUser }/>
       </div>
     );

@@ -7,7 +7,8 @@ class MessageList extends Component {
       return <Message
         key={message.id}
         username={message.user}
-        content={message.content} />
+        content={message.content}
+        color={this.props.color} />
     });
     return (
       <main className="messages">
