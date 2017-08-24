@@ -19,6 +19,7 @@ class App extends Component {
 
   componentDidMount() {
     this.socket = new WebSocket("ws:localhost:3001");
+
     this.socket.onmessage = (event) => {
       
       const newMessage = JSON.parse(event.data);
@@ -46,14 +47,14 @@ class App extends Component {
   }
 
   onNewPost(post) {
-    this.socket.send(JSON.stringify({type: 'content', content: post.content, user: post.user}));
+    this.socket.send(JSON.stringify({type: 'content', content: post.content, user: post.user, color: this.state.color}));
   }
 
   render() {
     return (
       <div>
         <Navbar userCount={ this.state.userCount } />
-        <MessageList messages={ this.state.messages } color={ this.state.color } />
+        <MessageList messages={ this.state.messages } />
         <Chatbar currentUser={ this.state.currentUser } onNewPost={ this.onNewPost } updateCurrentUser={ this.updateCurrentUser }/>
       </div>
     );

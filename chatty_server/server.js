@@ -10,6 +10,7 @@ const server = express()
 
 const wss = new SocketServer({ server });
 
+// Broadcast current user count
 const sendUserCount = () => {
   wss.clients.forEach(function each(client) {
     if (client.readyState === 1) {
@@ -32,11 +33,12 @@ wss.on('connection', (ws) => {
 
     let newMessage;
     if (message.type === 'content') {
-      newMessage = {type: 'content', id:uuid(), user:message.user, content:message.content};
+      // Receive color associated with App instance and attatch to response message
+      newMessage = {type: 'content', id:uuid(), user:message.user, content:message.content, color:message.color};
     }
     if (message.type === 'update') {
       const updateMessage = `${message.oldUser} Changed their name to ${message.newUser}`;
-      newMessage = {type:'update', id:uuid(), user:'SYSTEM', content: updateMessage};
+      newMessage = {type:'update', id:uuid(), user:'SYSTEM', content: updateMessage, color:'#000000'};
     }
 
     wss.clients.forEach(function each(client) {
