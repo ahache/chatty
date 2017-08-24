@@ -47,7 +47,7 @@ class App extends Component {
   }
 
   onNewPost(post) {
-    this.socket.send(JSON.stringify({type: 'content', content: post.content, user: post.user, color: this.state.color}));
+    this.socket.send(JSON.stringify({type: 'content', content: post, user: this.state.currentUser, color: this.state.color}));
   }
 
   render() {
