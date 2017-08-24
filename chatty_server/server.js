@@ -39,6 +39,7 @@ wss.on('connection', (ws) => {
     }
     if (message.type === 'update') {
       const updateMessage = `${message.oldUser} changed their name to ${message.newUser}`;
+      // Set system message color to black
       broadcast = {type:'update', id:uuid(), user:'SYSTEM', content: updateMessage, color:'#000000'};
     }
 
