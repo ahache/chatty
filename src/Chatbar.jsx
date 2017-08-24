@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 class Chatbar extends Component {
 
+  // When focus leaves username input field, name will update
   getUser = (event) => {
     const username = event.target.value ? event.target.value : 'Anonymous';
     this.props.updateCurrentUser(username);

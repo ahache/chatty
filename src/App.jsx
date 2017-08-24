@@ -39,6 +39,7 @@ class App extends Component {
     }
   }
 
+  // Update if user change
   updateCurrentUser(user) {
     if (this.state.currentUser !== user) {
       this.socket.send(JSON.stringify({type: 'update', oldUser: this.state.currentUser, newUser: user}));

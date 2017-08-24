@@ -40,6 +40,7 @@ body {
 
 .message {
   display: flex;
+  align-content: flex-start;
   padding: 5px;
 }
 
@@ -56,13 +57,19 @@ body {
 }
 
 .message-content {
-  flex: 8;
+  width: 80%;
+}
+
+.message-image {
+  width: 60%;
 }
 
 .message-username {
-  flex: 2;
+  width: 20%;
   font-weight: 700;
 }
+
+
 
 .navbar {
   background: tomato;

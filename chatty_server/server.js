@@ -14,36 +14,37 @@ const wss = new SocketServer({ server });
 const sendUserCount = () => {
   wss.clients.forEach(function each(client) {
     if (client.readyState === 1) {
-      const userCount = { type:'count', userCount: wss.clients.size };
-      client.send(JSON.stringify(userCount));
+      client.send(JSON.stringify({type:'count', userCount: wss.clients.size}));
     }
   });
 }
 
 wss.on('connection', (ws) => {
+
   console.log('Client connected');
   sendUserCount();
 
-  // Set color for user, based on number of logged in users mod 4
+  // Set color for user based on number of logged in users mod 4
   ws.send(JSON.stringify({type: 'color', index: wss.clients.size % 4}));
 
   ws.on('message', function incoming(message) {
 
     message = JSON.parse(message);
 
-    let newMessage;
+    let broadcast;
+    const { content } = message;
+
     if (message.type === 'content') {
-      // Receive color associated with App instance and attatch to response message
-      newMessage = {type: 'content', id:uuid(), user:message.user, content:message.content, color:message.color};
+      broadcast = {type: 'content', id:uuid(), user:message.user, content:content, color:message.color};
     }
     if (message.type === 'update') {
-      const updateMessage = `${message.oldUser} Changed their name to ${message.newUser}`;
-      newMessage = {type:'update', id:uuid(), user:'SYSTEM', content: updateMessage, color:'#000000'};
+      const updateMessage = `${message.oldUser} changed their name to ${message.newUser}`;
+      broadcast = {type:'update', id:uuid(), user:'SYSTEM', content: updateMessage, color:'#000000'};
     }
 
     wss.clients.forEach(function each(client) {
       if (client.readyState === 1) {
-        client.send(JSON.stringify(newMessage));
+        client.send(JSON.stringify(broadcast));
       }
     });
   });
