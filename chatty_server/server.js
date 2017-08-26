@@ -32,10 +32,9 @@ wss.on('connection', (ws) => {
     message = JSON.parse(message);
 
     let broadcast;
-    const { content } = message;
 
     if (message.type === 'content') {
-      broadcast = {type: 'content', id:uuid(), user:message.user, content:content, color:message.color};
+      broadcast = {type: 'content', id:uuid(), user:message.user, content:message.content, color:message.color};
     }
     if (message.type === 'update') {
       const updateMessage = `${message.oldUser} changed their name to ${message.newUser}`;
